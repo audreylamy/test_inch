@@ -9,36 +9,33 @@ var startDate = new Date(2018,6,2,10,30);
 var endDate = new Date(2018,6,2,14,00);
 var av1 = new Event(true, true, startDate, endDate);
 
-var newData = Event.prototype.openingCompagny(av1)
-arrayAvailable.push(newData)
+var openingCompagny = Event.prototype.parsingData(av1)
+arrayAvailable.push(openingCompagny)
 
 // The company is available on tuesday 3rd of july, from 11:30 to 16:00
 var startDate = new Date(2018,6,3,11,30);
 var endDate = new Date(2018,6,3,16,00);
 var av2 = new Event(true, false, startDate, endDate);
 
-newData = Event.prototype.openingCompagny(av2)
-arrayAvailable.push(newData)
+openingCompagny = Event.prototype.parsingData(av2)
+arrayAvailable.push(openingCompagny)
 
-console.log(arrayAvailable)
 // INTERVENTIONS //
 // The company has an intervention scheduled tuesday 3rd of july, from 12:30 to 13:00
 startDate = new Date(2018,6,3,12,30);
 endDate = new Date(2018,6,3,13,00);
 var inter1 = new Event(false, false, startDate, endDate);
 
-newData = Event.prototype.openingCompagny(inter1)
-arrayIntervention.push(newData)
+var interventionDate = Event.prototype.parsingData(inter1)
+arrayIntervention.push(interventionDate)
 
 // The company has an intervention scheduled monday 9th of july, from 13:30 to 14:00
 startDate = new Date(2018,6,9,13,30);
 endDate = new Date(2018,6,9,14,00);
 var inter2 = new Event(false, false, startDate, endDate);
 
-newData = Event.prototype.openingCompagny(inter2)
-arrayIntervention.push(newData)
-
-console.log(arrayIntervention)
+interventionDate = Event.prototype.parsingData(inter2)
+arrayIntervention.push(interventionDate)
 
 
 // MAIN RESPONSE //
