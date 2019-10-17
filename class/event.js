@@ -35,24 +35,33 @@ class Event {
         var minutes = parseInt(diff.asMinutes())
         var nbInterval = minutes / 30
 
-        const day = moment(open.startDate).format('L') // mm/day/years
+        const day = open.startDate // mm/day/years
         const hoursByDay = this.arrayHours(startHour, endHour, start, nbInterval) // return array hours
 
         return {opening, recurring, day, hoursByDay}
     }
 
-    checkRecurring(arrAvailableDay, recurring) {
-        if (recurring) {
-            return moment(moment(arrAvailableDay).add(7, 'day')).format('L');
-        } else {
-            return arrAvailableDay
-        }
+    recursiveRecurring(arrAvailableDay, fromDate, toDate, arrayDates) {
+        if (moment(arrAvailableDay).format('L') > moment(toDate).format('L'))
+            return arrayDates
+        else if (moment(arrAvailableDay).format('L') < moment(fromDate).format('L'))
+            return this.recursiveRecurring(moment(arrAvailableDay).add(7, 'day'), fromDate, toDate, arrayDates)
+        else
+            arrayDates.push(arrAvailableDay)
+        return this.recursiveRecurring(moment(arrAvailableDay).add(7, 'day'), fromDate, toDate, arrayDates)
+    }
+
+    checkIntervalDates(day, fromDate, toDate, arrIntervention, hoursByDay) {
+        var res = moment(day).isBetween(fromDate, toDate) || day === fromDate || day === toDate
+            if (res) {
+                var result = this.checkIntervention(arrIntervention, hoursByDay, day)
+                this.display(result, day)
+            }
     }
 
     checkIntervention(arrIntervention, hoursByDay, day) {
-  
         for (var i = 0; arrIntervention.length > i; i++) {
-            if (arrIntervention[i].day === day) {
+            if (moment(arrIntervention[i].day).format('L')=== moment(day).format('L')) {
                 for (var y = 0; arrIntervention[i].hoursByDay.length > y; y++) {
                     if (hoursByDay.includes(arrIntervention[i].hoursByDay[y])){
                         hoursByDay = hoursByDay.filter( date => date !== arrIntervention[i].hoursByDay[y])
@@ -62,7 +71,7 @@ class Event {
                 return hoursByDay
             }
         }
-        return false
+        return hoursByDay
     }
 
     display(dates, day) {
@@ -70,17 +79,18 @@ class Event {
     }
 
     availabilities(fromDate, toDate, arrAvailable, arrIntervention) {
-        var fromDate = moment(fromDate).format('L')
-        var toDate = moment(toDate).format('L')
-
+        var fromDate = fromDate
+        var toDate = toDate
         for (var i = 0; arrAvailable.length > i; i++) {
-            var arrAvailableDay = this.checkRecurring(arrAvailable[i].day, arrAvailable[i].recurring)
-            
-            var res = moment(arrAvailableDay).isBetween(fromDate, toDate) || arrAvailableDay === fromDate || arrAvailableDay === toDate
-            if (res) {
-                arrAvailable[i].hoursByDay
-                var result = this.checkIntervention(arrIntervention, arrAvailable[i].hoursByDay, arrAvailableDay)
-                this.display(result, arrAvailableDay)
+            if (arrAvailable[i].recurring) {
+                const arrayDates = []
+                var arrAvailableDay = this.recursiveRecurring(arrAvailable[i].day, fromDate, toDate, arrayDates)
+               arrAvailableDay.forEach(day => {
+                    this.checkIntervalDates(day, fromDate, toDate, arrIntervention, arrAvailable[i].hoursByDay)
+                });
+            }
+            else {
+                this.checkIntervalDates(arrAvailable[i].day, fromDate, toDate, arrIntervention, arrAvailable[i].hoursByDay)
             }
         }
 
