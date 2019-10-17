@@ -41,14 +41,8 @@ class Event {
         return {opening, recurring, day, hoursByDay}
     }
 
-    recursiveRecurring(arrAvailableDay, fromDate, toDate, arrayDates) {
-        if (moment(arrAvailableDay).format('L') > moment(toDate).format('L'))
-            return arrayDates
-        else if (moment(arrAvailableDay).format('L') < moment(fromDate).format('L'))
-            return this.recursiveRecurring(moment(arrAvailableDay).add(7, 'day'), fromDate, toDate, arrayDates)
-        else
-            arrayDates.push(arrAvailableDay)
-        return this.recursiveRecurring(moment(arrAvailableDay).add(7, 'day'), fromDate, toDate, arrayDates)
+    display(dates, day) {
+        console.log("I'm available on " + moment(day).format('MMMM Do YYYY') + ", at " + dates.join(', '))
     }
 
     checkIntervalDates(day, fromDate, toDate, arrIntervention, hoursByDay) {
@@ -74,8 +68,14 @@ class Event {
         return hoursByDay
     }
 
-    display(dates, day) {
-        console.log("I'm available on " + moment(day).format('MMMM Do YYYY') + ", at " + dates.join(', '))
+    recursiveRecurring(arrAvailableDay, fromDate, toDate, arrayDates) {
+        if (moment(arrAvailableDay).format('L') > moment(toDate).format('L'))
+            return arrayDates
+        else if (moment(arrAvailableDay).format('L') < moment(fromDate).format('L'))
+            return this.recursiveRecurring(moment(arrAvailableDay).add(7, 'day'), fromDate, toDate, arrayDates)
+        else
+            arrayDates.push(arrAvailableDay)
+        return this.recursiveRecurring(moment(arrAvailableDay).add(7, 'day'), fromDate, toDate, arrayDates)
     }
 
     availabilities(fromDate, toDate, arrAvailable, arrIntervention) {
@@ -93,7 +93,7 @@ class Event {
                 this.checkIntervalDates(arrAvailable[i].day, fromDate, toDate, arrIntervention, arrAvailable[i].hoursByDay)
             }
         }
-
+        console.log("I'm not available any other time !")
     }
 }
 
