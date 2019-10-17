@@ -1,5 +1,5 @@
 ## Overview
-opnening_hours
+opening_hours
 
 ## Init app
 1/ Git clone the repository
