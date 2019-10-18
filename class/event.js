@@ -23,7 +23,7 @@ class Event {
             }
     }
 
-    // Check if interventions happen this day and return array of hours without interventions
+    // Check if interventions is this day and return array of hours without hours of interventions
     checkIntervention(arrIntervention, arrayHours, day) {
         for (var i = 0; arrIntervention.length > i; i++) {
             if (moment(arrIntervention[i].day).format('L')=== moment(day).format('L')) {
